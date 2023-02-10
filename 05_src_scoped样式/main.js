@@ -10,8 +10,5 @@ Vue.config.productionTip = false
 // 创建vm实例
 new Vue({
     el:'#app',
-    render:h => h(App),
-    beforeCreate(){
-        Vue.prototype.$bus = this
-    }
+    render:h => h(App)
 })

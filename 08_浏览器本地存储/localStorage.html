@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalStorage</title>
+</head>
+<body>
+    <h2>localStorage</h2>
+    <button class="btn1">点我保存一个数据</button>
+    <button class="btn2">点我读取一个数据</button>
+    <button class="btn3">点我删除一个数据</button>
+    <button class="btn4">点我移除所有数据</button>
+    <script>
+        let p =  {name:'xiana',age:16}
+        let btn1 = document.querySelector('.btn1')
+        let btn2 = document.querySelector('.btn2')
+        let btn3 = document.querySelector('.btn3')
+        let btn4 = document.querySelector('.btn4')
+        // ⭐保存数据
+        btn1.addEventListener('click',function(){
+            console.log('save ok') //是否输出成功
+            localStorage.setItem('fruit','banana') //水果数据
+            localStorage.setItem('NumTest',6) //数字数据(检测是否将数字用toString转换为字符串 是否转?=>ok)
+            localStorage.setItem('person',p) //将对象转为了字符串 [object object]
+            localStorage.setItem('person1',JSON.stringify(p)) //将对象先转为 json就能被浏览器localStorage识别
+        })
+        // ⭐读取数据
+        btn2.addEventListener('click',function(){
+            console.log('get ok') //是否输出成功
+            console.log("fruit:",localStorage.getItem('fruit'))
+            console.log("NumTest:",localStorage.getItem('NumTest'))
+            console.log("person:",localStorage.getItem('person'))
+            console.log("person1解析前:",localStorage.getItem('person1'))
+            console.log("person1解析后(Json->obj):",JSON.parse(localStorage.getItem('person1')))
+        })
+        // ⭐移除数据
+        btn3.addEventListener('click',function(){
+            console.log('remove ok') //是否输出成功
+            localStorage.removeItem("NumTest")          
+        })
+        // ⭐移除所有数据
+        btn4.addEventListener('click',function(){
+            console.log('clear ok') //是否输出成功
+            localStorage.clear()          
+        })
+
+    </script>
+</body>
+</html>

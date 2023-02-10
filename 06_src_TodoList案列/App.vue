@@ -3,27 +3,21 @@
   <div class="todo-container">
     <div class="todo-wrap">
       <!-- TODO: MyHeader-->
-      <MyHeader @addTodo="addTodo" />
+      <MyHeader :addTodo="addTodo" />
+
       <MyList 
       :todos="todos" 
       :checkTodo="checkTodo"
       :deleteTodo="deleteTodo" 
       />
 
-<!-- 注意，此处todos为数据，不需要改成自定义事件，自定义事件为了拿到子数据，而todos是数据通过props给子用 -->
-      <MyFooter 
-      :todos="todos" 
-      @checkAllTodo="checkAllTodo" 
-      @clearAllTodo="clearAllTodo" 
-      />
+      <MyFooter :todos="todos" :checkAllTodo="checkAllTodo" :clearAllTodo="clearAllTodo" />
     </div>
   </div>
 </div>
 </template>
 
 <script>
-// ⭐引入消息pubsub库
-import pubsub from 'pubsub-js'
 // 引入子组件
 import MyHeader from "./components/MyHeader"
 import MyList from "./components/MyList"
@@ -34,9 +28,11 @@ export default {
     components:{MyHeader,MyList,MyFooter},
     data() {
     return {
-      // ⭐数据在哪里，操作数据的方法就在哪里
-      // 此处是为了防止todos为null,从而令MyFooter中arr,length报错没有length属性
-      todos:JSON.parse(localStorage.getItem("todos")) || []
+      todos:[
+        {id:"001",title:"事1",done:true},
+        {id:"002",title:"事2",done:false},
+        {id:"003",title:"事3",done:true}
+      ]
     }
   },
   methods: {
@@ -55,14 +51,13 @@ export default {
         })
       },
       // 删除一个todo
-      // ⭐使用_占个位,因为传参第一个默认为消息名
-      deleteTodo(_,id){
+      deleteTodo(id){
         this.todos = this.todos.filter((todo)=>{
           return todo.id !== id
         })
       },
       // footer中input全选or全不选
-      checkAllTodo(msgName,done){
+      checkAllTodo(done){
         this.todos.forEach((todo)=>{
           todo.done = done
         })
@@ -72,37 +67,7 @@ export default {
         this.todos = this.todos.filter((todo)=>{
           return !todo.done
         })
-      },
-      updateTodo(id,title){
-        console.log('App组件告诉你,我已收到了Item组件传递的消息id和新title:',id,title)
-        this.todos.forEach((todo)=>{
-          if(id === todo.id) todo.title = title
-
-        })
       }
-    },
-    mounted(){
-      this.$bus.$on('checkTodo',this.checkTodo)
-      this.$bus.$on('updateTodo',this.updateTodo)
-      // this.$bus.$on('deleteTodo',this.deleteTodo)
-      // ⭐消息订阅
-      this.pubId = pubsub.subscribe('deleteTodo',this.deleteTodo)
-    },
-    beforeDestroy(){
-      // ⭐解绑全局总线一些事件
-      this.$bus.$off('updateTodo')
-      // ⭐取消订阅
-      pubsub.unsubscribe(this.pubId)
-    },
-    watch:{
-      todos:{
-        // 需要开启深度监视，因为done值改变不会引起浅层监视todos的发现，从而不更新插入(保存)本地存储的数据
-        deep:true,
-        handler(val){
-          localStorage.setItem("todos",JSON.stringify(val))
-        }
-      }
-      
     }
 }
 </script>
