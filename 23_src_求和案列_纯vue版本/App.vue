@@ -14,9 +14,6 @@ export default {
     return {};
   },
   components: { Count },
-  mounted() {
-    console.log(this)
-  },
 };
 </script>
 
