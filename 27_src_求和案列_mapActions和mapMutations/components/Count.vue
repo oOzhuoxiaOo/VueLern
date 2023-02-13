@@ -1,10 +1,8 @@
 <template>
   <!-- 翻译category:分类 -->
   <div>
-    <h1>state中PersonList数组的长度为:{{personList.length}}</h1>
-    <h1>当前求和为: {{ sum }}</h1>
-    <!-- TODO:该问题未解决(bigSum在哪？)👌已解决(通过[]读取带斜杠的key) -->
-    <h1>当前求和放大十倍为: {{$store.getters['countAbout/bigSum']}}</h1>
+    <h1>当前求和为: {{ $store.state.sum }}</h1>
+    <h1>当前求和放大十倍为: {{ $store.getters.bigSum }}</h1>
     <h1>对象写法:当前求和放大十倍为: {{daSum}}</h1>
     <h1>数组写法:当前求和放大十倍为: {{bigSum}}</h1>
     <h1>学校为:{{ xuexiao }},学生为{{ xuesheng }}</h1>
@@ -40,10 +38,6 @@ export default {
   },
   computed: {
     // 直接使用计算属性展现store中state中数据
-    personList(){
-        return this.$store.state.personAbout.personList
-    },
-
     /* xuexiao() {
       return this.$store.state.school;
     },
@@ -53,21 +47,24 @@ export default {
     // 🚩mapState
     // ⭐借助mapState生成计算属性，从state中读取数据。(对象写法)
     // 引入mapState,通过扩展运算符把mapState生成的对象展开，内部为key:value(value为函数)
-    ...mapState('countAbout',{xuexiao: "school", xuesheng:'student'}),
+    ...mapState({xuexiao: "school", xuesheng:'student'}),
     // ⭐借助mapState生成计算属性，从state中读取数据。(数组写法)
     // 注意：此种写法必须计算属性的名和state数据的名一致才可以(对象写法可以起别名1)
-    ...mapState('countAbout',['sum','school','student']),
+    ...mapState(['school','student']),
 
     // 🚩mapGetters (和mapState类似)
     // ⭐
-    ...mapGetters('countAbout',{'daSum':'bigSum'}),
+    ...mapGetters({'daSum':'bigSum'}),
     // ⭐
-    ...mapGetters('countAbout',['bigSum'])
-
+    ...mapGetters(['bigSum'])
 
   },
   mounted() {
-    console.log(this)
+    /* const m = mapState({
+      xuexiao: "school",
+      xuesheng:'student'
+    })
+    console.log(m) */
   },
   methods: {
     // 程序员亲自写法
@@ -82,9 +79,9 @@ export default {
     }, */
     // 🚩借助mapMutations生成对应的方法，方法会调用commit去联系mutations
     // ⭐借助mapMutations生成对应的方法，方法会调用commit去联系mutations(对象写法)
-    ...mapMutations('countAbout',{increment:'JIA',decrement:'JIAN'}),
+    ...mapMutations({increment:'JIA',decrement:'JIAN'}),
     // ⭐借助mapMutations生成对应的方法，方法会调用commit去联系mutations(数组)
-    ...mapMutations('countAbout',['JIA','JIAN']),
+    ...mapMutations(['JIA','JIAN']),
     // *******************************************************************
     /* // 奇数加
     incrementOdd() {
@@ -97,9 +94,9 @@ export default {
     }, */
     // 🚩借助mapActions生成对应的方法，方法会调用dispatch去联系Actions
     // ⭐借助mapActions生成对应的方法，方法会调用dispatch去联系Actions(对象写法)
-    ...mapActions('countAbout',{incrementOdd:'jiaOdd',incrementWait:'jiaWait'}),
+    ...mapActions({incrementOdd:'jiaOdd',incrementWait:'jiaWait'}),
     // ⭐借助mapActions生成对应的方法，方法会调用dispatch去联系Actions(数组写法)
-    ...mapActions('countAbout',['jiaOdd','jiaWait']),
+    ...mapActions(['jiaOdd','jiaWait']),
   },
 };
 </script>
